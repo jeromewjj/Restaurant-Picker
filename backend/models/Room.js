@@ -13,9 +13,12 @@ const RoomSchema = new Schema({
     choices: [
         {
             type: mongoose.Schema.Types.ObjectId,
-            ref: "User"
+            ref: "UserModel"
         }
-    ]
+    ],
+    generatedChoice: {
+        type: String
+    }
 })
 const RoomModel = mongoose.model("RoomModel", RoomSchema);
 export {RoomModel};

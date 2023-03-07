@@ -1,27 +1,27 @@
 import express from "express";
-// import {createRoom, joinRoom, getRandomRestaurant, deleteRoom} from "../controllers/roomController"
+import {createRoom, joinRoom, getRandomRestaurant, deleteRoom} from "../controllers/roomController.js"
 
 const RoomRoute = express.Router();
 
-// RoomRoute.post(
-//     "/createRoom",
-//     createRoom
-// );
+RoomRoute.post(
+    "/createRoom",
+    createRoom
+);
 
-// RoomRoute.put(
-//     "/:roomId",
-//     joinRoom
-// );
+RoomRoute.put(
+    "/:roomId",
+    joinRoom
+);
 
-// RoomRoute.get(
-//     "/getRandomRestaurant/:roomId",
-//     getRandomRestaurant
-// );
+RoomRoute.get(
+    "/getRandomRestaurant/:roomId",
+    getRandomRestaurant
+);
 
-// RoomRoute.delete(
-//     "/deleteRoom/:roomId",
-//     deleteRoom
-// )
+RoomRoute.delete(
+    "/deleteRoom/:roomId",
+    deleteRoom
+)
 
 
 
