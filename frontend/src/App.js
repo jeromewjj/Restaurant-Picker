@@ -1,24 +1,28 @@
-import logo from './logo.svg';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route
+} from "react-router-dom";
+import MainPage from "./pages/MainPage";
+import CreateRoomPage from "./pages/CreateRoomPage";
+import JoinRoomPage from "./pages/JoinRoomPage";
+import RoomPage from "./pages/RoomPage";
+import NotFoundPage from "./pages/NotFoundPage";
 import './App.css';
 
 function App() {
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+      <Router>
+        <Routes>
+          <Route path="/" element={<MainPage/>}/>
+          <Route path="/create-room" element={<CreateRoomPage/>}/>
+          <Route path="/join-room" element={<JoinRoomPage/>}/>
+          <Route path="/room/:roomId" element={<RoomPage/>}/>
+          <Route path="*" element={<NotFoundPage/>}/>
+        </Routes>
+      </Router>
+      </div>
   );
 }
 
