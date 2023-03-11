@@ -3,8 +3,7 @@ import randomize from "randomatic";
 
 const createRoom = async (req, res) => {
   try {
-    // const ownerId = req.cookie.userId;
-    const ownerId = "6407523e87990092a31d7708";
+    const ownerId = req.cookies.userId;
     const roomId = randomize("0", 6);
     console.log(roomId);
     const createdRoom = await RoomModel.create({
@@ -21,9 +20,11 @@ const createRoom = async (req, res) => {
 const joinRoom = async (req, res) => {
   try {
     const roomId = req.params.roomId;
-    // const userId = req.cookie.userId;
-    const userId = "6407525c917493568ee04683";
+    const userId = req.cookies.userId;
     const updatedRoom = await RoomModel.findOne({ roomId: roomId });
+    if (!updatedRoom) {
+      throw new Error("Room Not Found!");
+    }
     const isUserInRoom = updatedRoom.choices.includes(userId);
     if (!isUserInRoom) {
       updatedRoom.choices.push(userId);
@@ -38,8 +39,7 @@ const joinRoom = async (req, res) => {
 const getRandomRestaurant = async (req, res) => {
   try {
     const roomId = req.params.roomId;
-    // const userId = req.cookie.userId;
-    const userId = "6407525c917493568ee04683";
+    const userId = req.cookies.userId;
     const room = await RoomModel.findOne({ roomId: roomId }).populate(
       "choices"
     );
@@ -64,8 +64,7 @@ const getRandomRestaurant = async (req, res) => {
 const deleteRoom = async (req, res) => {
   try {
     const roomId = req.params.roomId;
-    // const userId = req.cookie.userId;
-    const userId = "6407523e87990092a31d7708";
+    const userId = req.cookie.userId;
     const room = await RoomModel.findOne({ roomId: roomId });
     const isOwner = room.ownerId === userId;
     if (!isOwner) {

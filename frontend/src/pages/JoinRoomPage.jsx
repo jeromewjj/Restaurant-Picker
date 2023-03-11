@@ -1,11 +1,37 @@
 import React from "react";
 import { Box, Button, TextField, Typography } from "@mui/material";
 import backgroundImage from "../images/background.png";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import reqInstance from "../config";
 
 const JoinRoomPage = () => {
-  const [name, setName] = React.useState("");
-  const [restaurant, setRestaurant] = React.useState("");
-  const [roomId, setRoomId] = React.useState("");
+  const [name, setName] = useState("");
+  const [restaurant, setRestaurant] = useState("");
+  const [roomId, setRoomId] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    try {
+      e.preventDefault();
+      const createUserRes = await reqInstance.post(
+        `http://localhost:8080/user/createUser`,
+        {
+          name,
+          restaurant,
+        }
+      );
+      console.log(createUserRes);
+      const joinGroupRes = await reqInstance.put(
+        `http://localhost:8080/room/${roomId}`
+      );
+      console.log(joinGroupRes);
+      navigate(`/room/${roomId}`,{state:{roomId, ownerId: joinGroupRes.data.ownerId}})
+    } catch (error) {
+      setErrorMessage(error.response.data);
+    }
+  };
 
   return (
     <Box
@@ -38,7 +64,7 @@ const JoinRoomPage = () => {
           borderRadius: "8px",
           boxShadow: "0px 0px 20px rgba(0,0,0,0.3)",
           zIndex: 2,
-          width:'25%'
+          width: "25%",
         }}
       >
         <Typography
@@ -49,11 +75,17 @@ const JoinRoomPage = () => {
         >
           Join Room
         </Typography>
-        <form
-          noValidate
-          autoComplete="off"
-          onSubmit={(e) => e.preventDefault()}
+        {errorMessage&&(
+          <Typography
+          variant="h5"
+          align="center"
+          gutterBottom
+          sx={{ color: "red", fontWeight: "bold" }}
         >
+          {errorMessage}
+        </Typography>
+        )}
+        <form noValidate autoComplete="off" onSubmit={handleSubmit}>
           <Box
             display="flex"
             flexDirection="column"
@@ -67,8 +99,8 @@ const JoinRoomPage = () => {
               variant="outlined"
               onChange={(e) => setRoomId(e.target.value)}
               value={roomId}
-              sx={{ width: "100%", mb: 2}}
-              InputLabelProps={{style:{fontWeight:'100'}}}
+              sx={{ width: "100%", mb: 2 }}
+              InputLabelProps={{ style: { fontWeight: "100" } }}
             />
             <TextField
               id="name"
@@ -78,8 +110,7 @@ const JoinRoomPage = () => {
               onChange={(e) => setName(e.target.value)}
               value={name}
               sx={{ width: "100%", mb: 2 }}
-              InputLabelProps={{style:{fontWeight:'100'}}}
-
+              InputLabelProps={{ style: { fontWeight: "100" } }}
             />
             <TextField
               id="restaurant"
@@ -89,7 +120,7 @@ const JoinRoomPage = () => {
               onChange={(e) => setRestaurant(e.target.value)}
               value={restaurant}
               sx={{ width: "100%", mb: 2 }}
-              InputLabelProps={{style:{fontWeight:'100'}}}
+              InputLabelProps={{ style: { fontWeight: "100" } }}
             />
             <Button
               type="submit"
@@ -97,7 +128,6 @@ const JoinRoomPage = () => {
               color="error"
               size="large"
               sx={{ width: "100%" }}
-              
             >
               <Typography sx={{ fontWeight: "bold", fontSize: "18px" }}>
                 Join Room

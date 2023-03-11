@@ -1,10 +1,37 @@
 import React from "react";
 import { Box, Button, TextField, Typography } from "@mui/material";
+import { useState } from "react";
 import backgroundImage from "../images/background.png";
+import { useNavigate } from "react-router-dom";
+import reqInstance from "../config";
 
 const CreateRoomPage = () => {
-  const [name, setName] = React.useState("");
-  const [restaurant, setRestaurant] = React.useState("");
+  const [name, setName] = useState("");
+  const [restaurant, setRestaurant] = useState("");
+  const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    try {
+      e.preventDefault();
+      const createUserRes = await reqInstance.post(
+        `http://localhost:8080/user/createUser`,
+        {
+          name,
+          restaurant,
+        }
+      );
+      console.log(createUserRes);
+      const createGroupRes = await reqInstance.post(
+        `http://localhost:8080/room/createRoom`
+      );
+      console.log(createGroupRes);
+      navigate(`/room/${createGroupRes.data.roomId}`, {state:{roomId: createGroupRes.data.roomId, ownerId: createGroupRes.data.ownerId}})
+    } catch (error) {
+      setErrorMessage(error.response.data);
+    }
+  };
+
   return (
     <Box
       display="flex"
@@ -47,10 +74,20 @@ const CreateRoomPage = () => {
         >
           Create a Room
         </Typography>
+        {errorMessage&&(
+          <Typography
+          variant="h5"
+          align="center"
+          gutterBottom
+          sx={{ color: "red", fontWeight: "bold" }}
+        >
+          {errorMessage}
+        </Typography>
+        )}
         <form
           noValidate
           autoComplete="off"
-          onSubmit={(e) => e.preventDefault()}
+          onSubmit={handleSubmit}
         >
           <Box
             display="flex"
