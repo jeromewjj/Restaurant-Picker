@@ -13,7 +13,6 @@ const createUser = async (req, res) => {
       .status(200)
       .json(createdUser);
   } catch (error) {
-    console.log(error);
     res.status(404).json(error.message);
   }
 };

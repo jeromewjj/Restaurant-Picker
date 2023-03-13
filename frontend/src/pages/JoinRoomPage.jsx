@@ -22,12 +22,10 @@ const JoinRoomPage = () => {
           restaurant,
         }
       );
-      console.log(createUserRes);
       const joinGroupRes = await reqInstance.put(
         `http://localhost:8080/room/${roomId}`
       );
-      console.log(joinGroupRes);
-      navigate(`/room/${roomId}`,{state:{roomId, ownerId: joinGroupRes.data.ownerId}})
+      navigate(`/room/${roomId}`,{state:{roomId}})
     } catch (error) {
       setErrorMessage(error.response.data);
     }

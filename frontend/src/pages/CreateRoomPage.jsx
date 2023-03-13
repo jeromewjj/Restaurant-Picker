@@ -21,12 +21,10 @@ const CreateRoomPage = () => {
           restaurant,
         }
       );
-      console.log(createUserRes);
       const createGroupRes = await reqInstance.post(
         `http://localhost:8080/room/createRoom`
       );
-      console.log(createGroupRes);
-      navigate(`/room/${createGroupRes.data.roomId}`, {state:{roomId: createGroupRes.data.roomId, ownerId: createGroupRes.data.ownerId}})
+      navigate(`/room/${createGroupRes.data.roomId}`, {state:{roomId: createGroupRes.data.roomId}})
     } catch (error) {
       setErrorMessage(error.response.data);
     }

@@ -5,7 +5,6 @@ const createRoom = async (req, res) => {
   try {
     const ownerId = req.cookies.userId;
     const roomId = randomize("0", 6);
-    console.log(roomId);
     const createdRoom = await RoomModel.create({
       roomId: roomId,
       ownerId: ownerId,
@@ -39,24 +38,16 @@ const joinRoom = async (req, res) => {
 const getRandomRestaurant = async (req, res) => {
   try {
     const roomId = req.params.roomId;
-    const userId = req.cookies.userId;
     const room = await RoomModel.findOne({ roomId: roomId }).populate(
       "choices"
     );
-    console.log(room);
-    const isOwner = room.ownerId === userId;
-    if (!isOwner) {
-      throw new Error("You do not have permission to pick a restaurant.");
-    } else {
-      const randomIndex = Math.floor(Math.random() * room.choices.length);
-      const selectedChoice = room.choices[randomIndex];
-      const selectedRestaurant = selectedChoice.restaurant;
-      room.generatedChoice = selectedRestaurant;
-      await room.save();
-    }
+    const randomIndex = Math.floor(Math.random() * room.choices.length);
+    const selectedChoice = room.choices[randomIndex];
+    const selectedRestaurant = selectedChoice.restaurant;
+    room.generatedChoice = selectedRestaurant;
+    await room.save();
     res.status(200).json(room);
   } catch (error) {
-    console.log(error);
     res.status(404).json(error.message);
   }
 };
@@ -68,7 +59,7 @@ const deleteRoom = async (req, res) => {
     const room = await RoomModel.findOne({ roomId: roomId });
     const isOwner = room.ownerId === userId;
     if (!isOwner) {
-      throw new Error("You do not have permission to pick a restaurant.");
+      throw new Error("You do not have permission to delete a restaurant.");
     } else {
       await RoomModel.findOneAndDelete({ roomId: roomId });
     }
